@@ -22,7 +22,8 @@ def download_word():
 		for index in data:
 			list_words.append(index.text)
 
-		cur.execute("INSERT INTO word VALUES(?, ?, ?);", list_words)
+		#difficulty basic = 3
+		cur.execute("INSERT INTO word VALUES(?, ?, ?, 3);", list_words)
 
 	conn.commit()			
 
@@ -36,7 +37,8 @@ def create_bd():
 	cur.execute("""CREATE TABLE IF NOT EXISTS word(
    		id INT,
    		enWord TEXT,
-   		ruWord TEXT);
+   		ruWord TEXT,
+		difficulty INT);
 	""")
 
 	conn.commit()
