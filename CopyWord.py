@@ -4,35 +4,27 @@ import sqlite3
 
 
 def download_word():
+	#подключение к БД
 	conn = sqlite3.connect('WordsTable.db')
 	cur = conn.cursor()
 
+	#парсер сайта
 	url = open('Link.txt','r').read()
-
 	response = requests.get(url)
+	soup = BeautifulSoup(response.text, 'lxml') 
 
-	soup = BeautifulSoup(response.text, 'lxml')
-
-	names = soup.find_all('tr')
-
-	for _ in names:
+	for _ in soup.find_all('tr'):
 
 		data = _.find_all('td')
 
 		list_words = []
+
 		for index in data:
 			list_words.append(index.text)
 
 		cur.execute("INSERT INTO word VALUES(?, ?, ?);", list_words)
 
 	conn.commit()			
-
-
-
-	
-
-
-	
 
 
 def create_bd():
