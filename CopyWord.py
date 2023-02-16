@@ -28,7 +28,7 @@ def download_word():
 	conn.commit()			
 
 
-def create_bd():
+def create_db():
 
 	conn = sqlite3.connect('WordsTable.db')
 
