@@ -1,15 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
 import sqlite3
-
+import os
 
 def download_word():
-	#подключение к БД
-	conn = sqlite3.connect('WordsTable.db')
+	#connecting DB
+	conn = sqlite3.connect(r'AdminFolder\WordsTable.db')
 	cur = conn.cursor()
 
 	#парсер сайта
-	url = open('Link.txt','r').read()
+	url = open('SettingsFile//Link.txt','r').read()
 	response = requests.get(url)
 	soup = BeautifulSoup(response.text, 'lxml') 
 
@@ -22,15 +22,21 @@ def download_word():
 		for index in data:
 			list_words.append(index.text)
 
-		#difficulty basic = 3
-		cur.execute("INSERT INTO word VALUES(?, ?, ?, 3);", list_words)
+		basic_difficulty  = 3
+		cur.execute(f"INSERT INTO word VALUES(?, ?, ?, {basic_difficulty});", list_words)
 
 	conn.commit()			
 
 
-def create_db():
+def create_WordDB():
 
-	conn = sqlite3.connect('WordsTable.db')
+	try:
+		os.mkdir('AdminFolder')
+
+	except:
+		pass
+
+	conn = sqlite3.connect(r'AdminFolder\WordsTable.db')
 
 	cur = conn.cursor()
 	
