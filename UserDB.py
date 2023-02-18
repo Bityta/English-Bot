@@ -2,7 +2,7 @@ import sqlite3
 import os
 import shutil
 
-
+# Функция,которая проверяет наличие собственой таблицы пользователя, при отсутвие создает её. Так же сохраняет каждый id и дату регестрации пользователя в Админ Таблицу
 def add_users(num, dat):
     conn = sqlite3.connect(r'AdminFolder\Users.db')
     cur = conn.cursor()
@@ -32,6 +32,7 @@ def add_users(num, dat):
     os.rename(r'UsersData\WordsTable.db', f'UsersData\\{str(num)+".db"}')
 
 
+# создание таблицы c ID пользователей
 def create_UsersDB():
 
     try:
@@ -43,8 +44,8 @@ def create_UsersDB():
     cur = conn.cursor()
 
     cur.execute("""CREATE TABLE IF NOT EXISTS users(
-   		id INT,
-   		dat TEXT);
-	""")
+        id INT,
+        dat TEXT);
+    """)
 
     conn.commit()
