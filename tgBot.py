@@ -14,6 +14,7 @@ def run_bot():
 
     TOKEN = open('SettingsFile//token.txt').read()
 
+    # считывание токена
     if not TOKEN:
         print("Token is not definde")
         exit(1)
@@ -21,7 +22,7 @@ def run_bot():
     bot = Bot(token=TOKEN)
     dp = Dispatcher(bot)
 
-    # создание кнопок и соеденение их в некую клавиатуру
+    # создание кнопок
     button1 = KeyboardButton('Знаю')
     button2 = KeyboardButton('Не знаю')
     button3 = KeyboardButton('Закончить')
@@ -30,6 +31,8 @@ def run_bot():
     button6 = KeyboardButton('Начать')
     button7 = KeyboardButton('Скрыть')
     button8 = KeyboardButton('хз')
+
+    # соедение кнопок в блоки
     keyboard1 = ReplyKeyboardMarkup(resize_keyboard=True).row(
         button1, button2).add(button3)
     keyboard2 = ReplyKeyboardMarkup(resize_keyboard=True).add(
@@ -58,9 +61,7 @@ def run_bot():
     async def command_go_handler(msg: types.Message):
         await msg.answer(f"{sql_word(msg.from_user.id)}", reply_markup=keyboard1)
 
-    # решить что то с num
-    # с dif решить
-    # сделать кнопку далее
+    # вылавливание нажатых кнопока
 
     @dp.message_handler()
     async def word_handler(msg: types.Message):
@@ -114,9 +115,11 @@ def run_bot():
         elif (msg.text == "Закончить") or (msg.text == "/stop") or (msg.text == "/end"):
             await msg.answer(f"Отлично позанимались! :)", reply_markup=keyboard3)
 
+    # запуск бота
     executor.start_polling(dp, skip_updates=True)
+    
 
-
+# функция по выбору слова по его сложности из персональной таблицы пользователся
 def sql_word(num):
 
     conn = sqlite3.connect(f'UsersData\\{num}.db')
