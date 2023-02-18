@@ -117,7 +117,7 @@ def run_bot():
 
     # запуск бота
     executor.start_polling(dp, skip_updates=True)
-    
+
 
 # функция по выбору слова по его сложности из персональной таблицы пользователся
 def sql_word(num):
@@ -125,20 +125,23 @@ def sql_word(num):
     conn = sqlite3.connect(f'UsersData\\{num}.db')
     cur = conn.cursor()
 
-    rand = randint(1, 500)
-    cur.execute(f"UPDATE word SET last_word = {rand} WHERE id = 1;")
-
-    cur.execute(f"SELECT last_difficulty,last_word FROM word WHERE id = 1")
-
-    dif, rand = (cur.fetchall()[0])
-
+    cur.execute(f"SELECT last_difficulty FROM word WHERE id = 1")
+    dif = (cur.fetchall()[0][0])
     if dif >= 1 and dif <= 5:
-        cur.execute(f"SELECT enWord FROM word WHERE difficulty == {dif}")
-
+        cur.execute(f"SELECT id,enWord FROM word WHERE difficulty == {dif}")
     else:
-        cur.execute(f"SELECT enWord FROM word")
+        cur.execute(f"SELECT id,enWord FROM word")
 
-    word = cur.fetchall()[rand-1][0]
+    words = (cur.fetchall())
+    if not len(words):
+        cur.execute(f"SELECT id,enWord FROM word")
+        words = (cur.fetchall())
+
+    rand = randint(1, len(words))
+
+    cur.execute(f"UPDATE word SET last_word = {(words[rand-1][0])} WHERE id = 1;")
+
+    rand = (words[rand-1][1])
 
     conn.commit()
-    return (word)
+    return (rand)
